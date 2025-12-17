@@ -23,12 +23,23 @@ struct RestaurantDetailView: View {
             }
             .overlay {
                 VStack {
-                    Image(systemName: "heart")
-                        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topTrailing)
-                        .padding()
-                        .font(.system(size: 30))
+                    
+                    if restaurant.isFavorite {
+                        Image(systemName: "heart.fill")
+                            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topTrailing)
+                            .padding()
+                            .font(.system(size: 30))
+                            .foregroundStyle(.yellow)
+                            .padding(.top, 40)
+                    } else {
+                        Image(systemName: "heart")
+                            .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topTrailing)
+                            .padding()
+                            .font(.system(size: 30))
                         .foregroundColor(.white)
                         .padding(.top, 40)
+                    }
+                   
                     
                     VStack(alignment: .leading, spacing: 5) {
                         Text(restaurant.name)
@@ -42,6 +53,10 @@ struct RestaurantDetailView: View {
                     .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .bottomLeading)
                     .foregroundStyle(.white)
                     .padding()
+                    
+                   
+                    
+                    
                 }
             }
             
