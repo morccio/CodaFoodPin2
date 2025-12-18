@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct RestaurantDetailView: View {
     
@@ -40,6 +41,7 @@ struct RestaurantDetailView: View {
                         .padding(.top, 40)
                     }
                    
+                   // Map()
                     
                     VStack(alignment: .leading, spacing: 5) {
                         Text(restaurant.name)
