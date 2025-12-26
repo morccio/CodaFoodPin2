@@ -122,7 +122,7 @@ struct RestaurantDetailView: View {
         .overlay(
             self.showReview ?
                 ZStack {
-                    ReviewView(restaurant: restaurant)
+                    ReviewView(isDisplayed: $showReview, restaurant: restaurant)
                 }
 
             : nil
