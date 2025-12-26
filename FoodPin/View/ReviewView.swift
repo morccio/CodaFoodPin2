@@ -10,7 +10,8 @@ import SwiftUI
 struct ReviewView: View {
     
     @Binding var isDisplayed: Bool
-
+    @State private var showRatings = false
+    
     var restaurant: Restaurant
     
     
@@ -59,10 +60,17 @@ struct ReviewView: View {
                             .fontWeight(.bold)
                             .foregroundColor(.white)
                     }
+                        .opacity(showRatings ? 1.0 : 0)
+                        .offset(x: showRatings ? 0 : 1000)
+                        .animation(.easeOut.delay(Double(Restaurant.Rating.allCases.firstIndex(of: rating)!) * 0.05), value: showRatings)
+            
                 }
             }
             
           
+        }
+        .onAppear {
+            showRatings.toggle()
         }
     }
 }
