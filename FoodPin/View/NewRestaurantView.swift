@@ -8,30 +8,76 @@
 import SwiftUI
 
 struct NewRestaurantView: View {
+
     
-   @State  var restaurantName = ""
+    @State private var restaurantImage = UIImage(named: "newphoto")!
+    
     
     var body: some View {
-        
-        VStack (alignment: .leading) {
-            
-            Text("NAME")
-                .font(.system(.headline, design: .rounded))
-                .foregroundColor(Color(.darkGray))
-            
-            TextField("Fill in the restaurant name", text: $restaurantName)
-                .font(.system(size: 20, weight: .semibold, design: .rounded))
-                .padding(.horizontal)
-                .padding(10)
-                .overlay ( RoundedRectangle(cornerRadius: 5)
-                    .stroke(Color(.systemGray5), lineWidth: 1)
-                )
-                .padding(.vertical, 10)
+            NavigationStack {
+
+                ScrollView {
+                    VStack {
+                        
+                        Image(uiImage: restaurantImage)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(minWidth: 0, maxWidth: .infinity)
+                            .frame(height: 200)
+                            .background(Color(.systemGray6))
+                            .clipShape(RoundedRectangle(cornerRadius: 20.0))
+                            .padding(.bottom)
+                        
+                        FormTextField(label: "NAME", placeholder: "Fill in the restaurant name", value: .constant(""))
+                        
+                        FormTextField(label: "TYPE", placeholder: "Fill in the restaurant type", value: .constant(""))
+
+                        FormTextField(label: "ADDRESS", placeholder: "Fill in the restaurant address", value: .constant(""))
+                        
+                        FormTextField(label: "PHONE", placeholder: "Fill in the restaurant phone", value: .constant(""))
+
+                        FormTextView(label: "DESCRIPTION", value: .constant(""), height: 100)
+                    }
+                    .padding()
+
+                }
+
+                // Navigation bar configuration
+                .navigationTitle("New Restaurant")
+            }
         }
-        
-    }
+    
 }
 
+
+
+struct FormTextView: View {
+
+    let label: String
+
+    @Binding var value: String
+
+    var height: CGFloat = 200.0
+
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(label.uppercased())
+                .font(.system(.headline, design: .rounded))
+                .foregroundStyle(Color(.darkGray))
+
+            TextEditor(text: $value)
+                .frame(maxWidth: .infinity)
+                .frame(height: height)
+                .padding(10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 5)
+                        .stroke(Color(.systemGray5), lineWidth: 1)
+                )
+                .padding(.top, 10)
+
+        }
+    }
+}
 
 
 struct FormTextField: View {
@@ -70,5 +116,5 @@ struct FormTextField: View {
 }
 
 #Preview("FormTextField", traits: .fixedLayout(width: 300, height: 200)) {
-    FormTextField(label: "NAME 2", placeholder: "Fill in the restaurant name", value: .constant(""))
+    FormTextField(label: "NAME2", placeholder: "Fill in the restaurant name", value: .constant(""))
 }
