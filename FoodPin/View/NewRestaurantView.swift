@@ -11,6 +11,12 @@ struct NewRestaurantView: View {
 
     
     @State private var restaurantImage = UIImage(named: "newphoto")!
+    @State private var showPhotoOptions = false
+    @State private var photoSource: PhotoSource?
+    
+    
+
+
     
     
     var body: some View {
@@ -27,6 +33,9 @@ struct NewRestaurantView: View {
                             .background(Color(.systemGray6))
                             .clipShape(RoundedRectangle(cornerRadius: 20.0))
                             .padding(.bottom)
+                            .onTapGesture {
+                                self.showPhotoOptions.toggle()
+                            }
                         
                         FormTextField(label: "NAME", placeholder: "Fill in the restaurant name", value: .constant(""))
                         
@@ -44,9 +53,38 @@ struct NewRestaurantView: View {
 
                 // Navigation bar configuration
                 .navigationTitle("New Restaurant")
+               
             }
+            .confirmationDialog("Choose your photo source", isPresented: $showPhotoOptions, titleVisibility: .visible) {
+
+                Button("Camera") {
+                    self.photoSource = .camera
+                }
+
+                Button("Photo Library") {
+                    self.photoSource = .photoLibrary
+                }
+            }
+            .fullScreenCover(item: $photoSource) { source in
+                switch source {
+                    case .photoLibrary: ImagePicker(sourceType: .photoLibrary, selectedImage: $restaurantImage).ignoresSafeArea()
+                    case .camera: ImagePicker(sourceType: .camera, selectedImage: $restaurantImage).ignoresSafeArea()
+                }
+        }
+        
+        
+        
         }
     
+}
+
+enum PhotoSource: Identifiable {
+    case photoLibrary
+    case camera
+
+    var id: Int {
+        hashValue
+    }
 }
 
 
