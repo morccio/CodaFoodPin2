@@ -14,8 +14,7 @@ struct NewRestaurantView: View {
     @State private var showPhotoOptions = false
     @State private var photoSource: PhotoSource?
     
-    
-
+    @Environment(\.dismiss) var dismiss
 
     
     
@@ -53,6 +52,22 @@ struct NewRestaurantView: View {
 
                 // Navigation bar configuration
                 .navigationTitle("New Restaurant")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            Image(systemName: "xmark")
+                        }
+
+                    }
+
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Text("Save")
+                            .font(.headline)
+                            .foregroundColor(Color("NavigationBarTitle"))
+                    }
+                }
                
             }
             .confirmationDialog("Choose your photo source", isPresented: $showPhotoOptions, titleVisibility: .visible) {
