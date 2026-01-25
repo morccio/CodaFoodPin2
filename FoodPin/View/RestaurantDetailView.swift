@@ -17,7 +17,7 @@ struct RestaurantDetailView: View {
     var body: some View {
         ScrollView {
             VStack (alignment: .leading) {
-                Image(restaurant.image)
+                Image(uiImage: restaurant.image)
                     .resizable()
                     .scaledToFill()
                     .frame(minWidth: 0, maxWidth: .infinity)

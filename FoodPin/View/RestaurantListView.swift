@@ -6,11 +6,17 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct RestaurantListView: View {
     
     @State private var showNewRestaurant = false
     
+    @Query var restaurants: [Restaurant]
+    
+    @Environment(\.modelContext) private var modelContext
+    
+    /*
     @State var restaurants = [
                                 Restaurant(name: "Cafe Deadend", type: "Coffee & Tea Shop", location: "G/F, 72 Po Hing Fong, Sheung Wan, Hong Kong", phone: "232-923423", description: "Searching for great breakfast eateries and coffee? This place is for you. We open at 6:30 every morning, and close at 9 PM. We offer espresso and espresso based drink, such as capuccino, cafe latte, piccolo and many more. Come over and enjoy a great meal.", image: "cafedeadend", isFavorite: false),
                                Restaurant(name: "Homei", type: "Cafe", location: "Shop B, G/F, 22-24A Tai Ping San Street SOHO, Sheung Wan, Hong Kong", phone: "348-233423", description: "A little gem hidden at the corner of the street is nothing but fantastic! This place is warm and cozy. We open at 7 every morning except Sunday, and close at 9 PM. We offer a variety of coffee drinks and specialties including lattes, cappuccinos, teas, and more. We serve breakfast, lunch, and dinner in an airy open setting. Come over, have a coffee and enjoy a chit-chat with our baristas.", image: "homei", isFavorite: false),
@@ -34,6 +40,15 @@ struct RestaurantListView: View {
                                Restaurant(name: "Royal Oak", type: "British", location: "2 Regency Street London SW1P 4BZ United Kingdom", phone: "343-988834", description: "Specialise in great pub food. Established in 1872, we have local and world lagers, craft beer and a selection of wine and spirits for people to enjoy. Don't forget to try our range of Young's Ales and Fish and Chips.", image: "royaloak", isFavorite: false),
                                Restaurant(name: "CASK Pub and Kitchen", type: "Thai", location: "22 Charlwood Street London SW1V 2DY Pimlico", phone: "432-344050", description: "With kitchen serving gourmet burgers. We offer food every day of the week, Monday through to Sunday. Join us every Sunday from 4:30 – 7:30pm for live acoustic music!", image: "cask", isFavorite: false)
     ]
+    */
+    
+    private func deleteRecord(indexSet: IndexSet) {
+
+          for index in indexSet {
+              let itemToDelete = restaurants[index]
+              modelContext.delete(itemToDelete)
+          }
+    }
     
     var body: some View {
         NavigationStack {
@@ -45,7 +60,9 @@ struct RestaurantListView: View {
                         }
                         .opacity(0)
                         
-                        BasicTextImageRow(restaurant: $restaurants[index])
+                        //BasicTextImageRow(restaurant: $restaurants[index])
+                        BasicTextImageRow(restaurant: restaurants[index])
+                        
                     }
                     .swipeActions(edge: .leading, allowsFullSwipe: false) {
                         Button {
@@ -63,9 +80,9 @@ struct RestaurantListView: View {
                         .tint(.orange)
                     }
                 }
-                .onDelete(perform: { indexSet in
+                .onDelete(perform: deleteRecord /*{ indexSet in
                     restaurants.remove(atOffsets: indexSet)
-                })
+                } */)
                 
                 .listRowSeparator(.hidden)
                 
@@ -95,7 +112,8 @@ struct BasicTextImageRow: View {
     
     // MARK: - Binding
     
-    @Binding var restaurant: Restaurant
+    // @Binding var restaurant: Restaurant
+    @Bindable var restaurant: Restaurant
     
     // MARK: - State variables
     
@@ -104,7 +122,9 @@ struct BasicTextImageRow: View {
     
     var body: some View {
         HStack(alignment: .top, spacing: 20) {
-            Image(restaurant.image)
+            // Image(restaurant.image)
+            Image(uiImage: restaurant.image)
+            
                 .resizable()
                 .frame(width: 120, height: 118)
                 .clipShape(RoundedRectangle(cornerRadius: 20))
@@ -166,11 +186,16 @@ struct BasicTextImageRow: View {
             
             let defaultText = "Just checking in at \(restaurant.name)"
             
+            ActivityView(activityItems: [defaultText, restaurant.image])
+            
+            /*
             if let imageToShare = UIImage(named: restaurant.image) {
                 ActivityView(activityItems: [defaultText, imageToShare])
             } else {
                 ActivityView(activityItems: [defaultText])
             }
+            
+            */
         }
         
     }
@@ -231,8 +256,7 @@ struct FullImageRow: View {
 }
 
 #Preview("BasicTextImageRow", traits: .sizeThatFitsLayout) {
-    BasicTextImageRow(restaurant: .constant(Restaurant(name: "Cafe Deadend", type: "Coffee & Tea Shop", location: "G/F, 72 Po Hing Fong, Sheung Wan, Hong Kong", phone: "232-923423", description: "Searching for great breakfast eateries and coffee? This place is for you. We open at 6:30 every morning, and close at 9 PM. We offer espresso and espresso based drink, such as capuccino, cafe latte, piccolo and many more. Come over and enjoy a great meal.", image: "cafedeadend", isFavorite: true)))
-}
+    BasicTextImageRow(restaurant: Restaurant(name: "Cafe Deadend", type: "Coffee & Tea Shop", location: "G/F, 72 Po Hing Fong, Sheung Wan, Hong Kong", phone: "232-923423", description: "Searching for great breakfast eateries and coffee? This place is for you. We open at 6:30 every morning, and close at 9 PM. We offer espresso and espresso based drink, such as capuccino, cafe latte, piccolo and many more. Come over and enjoy a great meal.", image: UIImage(named: "cafedeadend")!, isFavorite: true)) }
 
 #Preview("FullImageRow", traits: .sizeThatFitsLayout) {
     FullImageRow(name: "Cafe Deadend", type: "Cafe", location: "Hong Kong", imageName: "cafedeadend", isFavorite: .constant(true))
