@@ -53,39 +53,24 @@ struct RestaurantListView: View {
     var body: some View {
         NavigationStack {
             List {
-                ForEach(restaurants.indices, id: \.self) { index in
-                    ZStack(alignment: .leading) {
-                        NavigationLink(destination: RestaurantDetailView(restaurant: restaurants[index])) {
-                            EmptyView()
+                if restaurants.count == 0 {
+                    Image("emptydata")
+                        .resizable()
+                        .scaledToFit()
+                } else {
+                    ForEach(restaurants.indices, id: \.self) { index in
+                        ZStack(alignment: .leading) {
+                            NavigationLink(destination: RestaurantDetailView(restaurant: restaurants[index])) {
+                                EmptyView()
+                            }
+                            .opacity(0)
+
+                            BasicTextImageRow(restaurant: restaurants[index])
                         }
-                        .opacity(0)
-                        
-                        //BasicTextImageRow(restaurant: $restaurants[index])
-                        BasicTextImageRow(restaurant: restaurants[index])
-                        
                     }
-                    .swipeActions(edge: .leading, allowsFullSwipe: false) {
-                        Button {
-                            
-                        } label: {
-                            Image(systemName: "heart")
-                        }
-                        .tint(.green)
-                        
-                        Button {
-                            
-                        } label: {
-                            Image(systemName: "square.and.arrow.up")
-                        }
-                        .tint(.orange)
-                    }
+                    .onDelete(perform: deleteRecord)
+                    .listRowSeparator(.hidden)
                 }
-                .onDelete(perform: deleteRecord /*{ indexSet in
-                    restaurants.remove(atOffsets: indexSet)
-                } */)
-                
-                .listRowSeparator(.hidden)
-                
             }
             .listStyle(.plain)
             
@@ -255,10 +240,16 @@ struct FullImageRow: View {
         .preferredColorScheme(.dark)
 }
 
+
+
 #Preview("BasicTextImageRow", traits: .sizeThatFitsLayout) {
     BasicTextImageRow(restaurant: Restaurant(name: "Cafe Deadend", type: "Coffee & Tea Shop", location: "G/F, 72 Po Hing Fong, Sheung Wan, Hong Kong", phone: "232-923423", description: "Searching for great breakfast eateries and coffee? This place is for you. We open at 6:30 every morning, and close at 9 PM. We offer espresso and espresso based drink, such as capuccino, cafe latte, piccolo and many more. Come over and enjoy a great meal.", image: UIImage(named: "cafedeadend")!, isFavorite: true)) }
 
-#Preview("FullImageRow", traits: .sizeThatFitsLayout) {
+
+ 
+ #Preview("FullImageRow", traits: .sizeThatFitsLayout) {
     FullImageRow(name: "Cafe Deadend", type: "Cafe", location: "Hong Kong", imageName: "cafedeadend", isFavorite: .constant(true))
 }
+ 
+ 
 
